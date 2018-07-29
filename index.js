@@ -81,6 +81,20 @@ function create(config) {
 
     while (true) {
       read = fs.readSync(fd, buf, 0, 3);
+      if (read == 1 && buf.length == 3) {
+        switch(buf.toString('hex')) {
+          case '0c0000':
+            process.stdout.write('\u001b[2J\u001b[0;0H' + ask);
+            insert = 0;
+            str = '';
+            break;
+          case '150000':
+            process.stdout.write('\u001b[2K\u001b[0G' + ask);
+            insert = 0;
+            str = '';
+            break;
+        }
+      }
       if (read > 1) { // received a control sequence
         switch(buf.toString()) {
           case '\u001b[A':  //up arrow
